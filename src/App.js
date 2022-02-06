@@ -5,8 +5,6 @@ import Filter from './component/Filter'
 import { nanoid } from 'nanoid';
 import { Container } from './App.styles';
 
-
-
 class App extends Component {
   state = {
    contacts: [
@@ -52,7 +50,24 @@ class App extends Component {
      const { contacts, filter } = this.state;
     const normalizeFilter = filter.toLowerCase();
     return contacts.filter(contact => contact.name.toLowerCase().includes(normalizeFilter));
-   }
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+   console.log('prevState')
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+    }
+  }
+
+  componentDidMount() {
+    console.log('mount')
+    const contacts = localStorage.getItem('contacts');
+    const parseContacts = JSON.parse(contacts);
+    if (parseContacts) {
+      this.setState({contacts: parseContacts})
+      console.log(parseContacts)
+    }
+  }
   
 
   render() {
